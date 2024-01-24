@@ -1,0 +1,15 @@
+[Match]
+Name=vlanWan
+Type=vlan
+
+[Network]
+Description=The interface definition for the vlan device
+
+DHCP=yes
+IPv6Forwarding=yes
+
+[IPv6AcceptRA]
+DHCPv6Client=yes
+
+[DHCPv6]
+PrefixDelegationHint=::/60

@@ -1,0 +1,139 @@
+###########
+### NAT ###
+###########
+
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+-A POSTROUTING -o vlanWan -j MASQUERADE
+
+COMMIT
+
+
+
+
+##############
+### Filter ###
+##############
+
+*filter
+
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT DROP [0:0]
+
+
+###
+### LOCAL TRAFFIC RULES
+###
+
+-A INPUT -i lo -j ACCEPT
+-A OUTPUT -i lo -j ACCEPT
+
+
+###
+### ICMP RULES
+###
+
+-A INPUT -p icmp -j ACCEPT
+-A OUTPUT -p icmp -j ACCEPT
+
+
+###
+### FORWARD RULES
+###
+
+# allow egress traffic on a per network basis
+
+# allow related and established return traffic for outbound connections
+-A FORWARD -i vlanWan -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+# block all new ingress traffic
+-A FORWARD -i vlanWan -j DROP
+
+
+###
+### OUTPUT RULES
+###
+
+# this is for return traffic to the internal networks (dns, dhcp, etc)
+-A OUTPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+# log all remaining traffic and monitor logs to update rules as needed
+# monitor logs, and update the rules as needed
+-A OUTPUT -j LOG --log-prefix="[net4filter-O] "
+
+# either drop or accept all remaining traffic based on your security policies
+-A OUTPUT -j ACCEPT
+
+
+###
+### INPUT RULES
+###
+
+# allow return traffic of established outbound connections
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+# block all other inbound traffic to the router
+-A INPUT -i vlanWan -j DROP
+
+
+###
+### MANAGEMENT LAN RULES
+###
+
+# Forward from VLAN to WAN
+-A FORWARD -i vlanManage -o vlanWan -j ACCEPT
+
+# DHCPDISCOVER requests from clients
+-A INPUT -i vlanManage -p udp --dport 67 -j ACCEPT
+
+# SSH - accept from Managment lan, drop from all others
+-A INPUT -i vlanManage -p tcp --dport 22 -j ACCEPT
+
+# EXPLICITLY disallow SSH into the router from all other sources
+-A INPUT -p tcp --dport 22 -j DROP
+
+
+###
+### LAN A RULES
+###
+
+# Forward from VLAN to WAN
+-A FORWARD -i vlanA -o vlanWan -j ACCEPT
+
+# DHCPDISCOVER requests from clients
+-A INPUT -i vlanA -p udp --dport 67 -j ACCEPT
+
+# DNS - (accept if you are running a dns server)
+#-A INPUT -i vlanA -p tcp --dport 53 -j ACCEPT
+#-A INPUT -i vlanA -p udp --dport 53 -j ACCEPT
+
+
+###
+### LAN B RULES
+###
+
+# Forward from VLAN to WAN
+-A FORWARD -i vlanB -o vlanWan -j ACCEPT
+
+# DHCPDISCOVER requests from clients
+-A INPUT -i vlanB -p udp --dport 67 -j ACCEPT
+
+
+###
+### DEFAULT ACTIONS
+###
+
+# Log all remaining traffic so it can be handled
+-A INPUT -j LOG --log-prefix="[net4filter-I] "
+-A FORWARD -j LOG --log-prefix="[net4filter-F] "
+
+# Implicitly drop all remaining traffic with default rules
+
+
+
+COMMIT

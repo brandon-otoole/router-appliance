@@ -1,0 +1,6 @@
+[NetDev]
+Name=vlanB
+Kind=vlan
+
+[VLAN]
+Id=400

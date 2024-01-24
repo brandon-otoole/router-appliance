@@ -1,0 +1,12 @@
+[Unit]
+Description=Router Firewall Setup
+
+After=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/router-firewall-update.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

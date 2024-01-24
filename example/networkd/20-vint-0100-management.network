@@ -1,0 +1,13 @@
+[Match]
+Name=vlanManage
+Type=vlan
+
+[Network]
+Description=The interface definition for the vlan device
+
+Address=192.168.1.1/24
+
+[Network]
+IPv6SendRA=yes
+IPv6Forwarding=yes
+DHCPv6PrefixDelegation=yes

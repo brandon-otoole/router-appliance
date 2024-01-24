@@ -1,0 +1,6 @@
+[NetDev]
+Name=vlanManage
+Kind=vlan
+
+[VLAN]
+Id=100

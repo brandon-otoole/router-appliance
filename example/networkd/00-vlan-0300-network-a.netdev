@@ -1,0 +1,6 @@
+[NetDev]
+Name=vlanA
+Kind=vlan
+
+[VLAN]
+Id=300

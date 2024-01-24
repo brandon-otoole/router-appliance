@@ -1,0 +1,24 @@
+[Match]
+Name=enp1s0
+Type=ether
+
+[Network]
+Description=The unconfigured physical ethernet device
+
+# add all of the vlans
+VLAN=vlanManage
+VLAN=vlanWan
+VLAN=vlanA
+VLAN=vlanB
+
+# turn this back on in production
+# disable the untagged network
+LinkLocalAddressing=no
+LLDP=no
+EmitLLDP=no
+IPv6AcceptRA=no
+IPv6SendRA=no
+IPv6Forwarding=no
+
+[Link]
+After=router-firewall-network.target
