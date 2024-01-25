@@ -31,7 +31,7 @@ COMMIT
 ###
 
 -A INPUT -i lo -j ACCEPT
--A OUTPUT -i lo -j ACCEPT
+-A OUTPUT -o lo -j ACCEPT
 
 
 ###
