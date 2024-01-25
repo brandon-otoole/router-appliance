@@ -60,6 +60,9 @@
 # allow return traffic of established outbound connections
 -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 
+# DHCPV6 Request - return traffic
+-A INPUT -p udp --sport 547 --dport 546 -j ACCEPT
+
 # block all other inbound traffic to the router
 -A INPUT -i vlanWan -j DROP
 
@@ -72,7 +75,7 @@
 -A FORWARD -i vlanManage -o vlanWan -j ACCEPT
 
 # DHCPDISCOVER requests from clients
--A INPUT -i vlanManage -p udp --dport 67 -j ACCEPT
+-A INPUT -i vlanManage -p udp --dport 547 -j DROP
 
 # SSH - accept from Managment lan, drop from all others
 -A INPUT -i vlanManage -p tcp --dport 22 -j ACCEPT
@@ -89,7 +92,7 @@
 -A FORWARD -i vlanA -o vlanWan -j ACCEPT
 
 # DHCPDISCOVER requests from clients
--A INPUT -i vlanA -p udp --dport 67 -j ACCEPT
+-A INPUT -i vlanA -p udp --dport 547 -j DROP
 
 # DNS - (accept if you are running a dns server)
 #-A INPUT -i vlanA -p tcp --dport 53 -j ACCEPT
@@ -104,7 +107,7 @@
 -A FORWARD -i vlanB -o vlanWan -j ACCEPT
 
 # DHCPDISCOVER requests from clients
--A INPUT -i vlanB -p udp --dport 67 -j ACCEPT
+-A INPUT -i vlanB -p udp --dport 547 -j DROP
 
 
 ###

@@ -77,6 +77,9 @@ COMMIT
 # allow return traffic of established outbound connections
 -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
+# DHCP Request - return traffic
+-A INPUT -p udp --sport 67 --dport 68 -j ACCEPT
+
 # block all other inbound traffic to the router
 -A INPUT -i vlanWan -j DROP
 
