@@ -25,8 +25,8 @@ config/
 |
 |-- networkd/
 |    |-- 00-vlan-[VLAN-ID].netdev
-|    |-- 10-adapter-[DEVICE].network
 |    |-- 20-vint-[VLAN-ID].network
+|    |-- 90-adapter-[DEVICE].network
 |
 |-- scripts/
 |    |-- router-firewall-network.target
