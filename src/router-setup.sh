@@ -6,13 +6,13 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# install required packages
+apt install -y iptables radvd isc-dhcp-server
+
 # remove old dhcp client and network config
 apt purge -y isc-dhcp-client ifupdown
 rm -r /etc/network/*
 rm -r /etc/dhcp/dhclient*
-
-# install required packages
-apt install -y iptables radvd
 
 # enable forwarding
 cp ./config/sysctl/50-router.conf /etc/sysctl.d/50-router.conf
@@ -59,8 +59,6 @@ systemctl restart systemd-networkd
 ##############
 # setup dhcp #
 ##############
-
-apt install -y isc-dhcp-server
 
 # copy the user config files
 cp ./config/dhcp/isc-dhcp-server /etc/default/isc-dhcp-server
