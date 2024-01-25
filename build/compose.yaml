@@ -1,0 +1,6 @@
+services:
+  router-builder:
+    image: router-builder
+    volumes:
+      - ./config:/input
+      - ./dist:/output
